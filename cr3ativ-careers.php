@@ -5,7 +5,7 @@
  * Description: Custom written plugin to add career items / job opportunites (and categorize them) to your WordPress site.
  * Author: Jonathan Atkinson
  * Author URI: http://cr3ativ.com/
- * Version: 1.0.2
+ * Version: 1.0.4
  */
 
 /* Place custom code below this line. */
@@ -23,6 +23,21 @@ function creativ_careers_add_scripts() {
 		
 add_action('wp_enqueue_scripts', 'creativ_careers_add_scripts');
 
+add_action('admin_head', 'cr3ativcareers_custom_css');
+
+function cr3ativcareers_custom_css() {
+  echo '<style>
+
+.jobcontent.column-jobcontent {
+    display: inline-block;
+    margin: 5px 0 25px;
+    height: 110px;
+    overflow: scroll;
+    width: 90%;
+}
+
+  </style>';
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////       WP Default Functionality       ////////////////////////////////
@@ -313,5 +328,74 @@ function cr3careers_string_limit_words($string, $word_limit)
 //////////////////////              Career widget                  /////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 include_once( 'includes/career-widget.php' );
+
+
+
+
+
+add_filter( 'manage_edit-cr3ativcareers_columns', 'my_edit_cr3ativcareers_columns' ) ;
+
+function my_edit_cr3ativcareers_columns( $columns ) {
+
+	$columns = array(
+		'cb' => '<input type="checkbox" />',
+        'date' => __( 'Date Created', 'cr3at_career' ),
+		'title' => __( 'Job Listing Name', 'cr3at_career' ),
+        'jobcontent' => __( 'Job Description' , 'cr3at_career'),
+        'jobcategory' => __( 'Department' , 'cr3at_career'),
+        'jobpdf' => __( 'Application PDF Attached' , 'cr3at_career')
+	);
+
+	return $columns;
+}
+
+add_action( 'manage_cr3ativcareers_posts_custom_column', 'my_manage_cr3ativcareers_columns', 10, 2 );
+
+function my_manage_cr3ativcareers_columns( $column, $post_id ) {
+	global $post;
+    $pdf = get_post_meta($post->ID, 'cr3ativ_wp_custom_attachment', true); 
+	switch( $column ) {
+        
+		case 'jobcontent' :
+
+			 echo get_the_content();
+			break;
+        
+		case 'jobcategory' :
+
+			$terms = get_the_terms( $post_id, 'cr3ativdepartment' );
+
+			/* If terms were found. */
+			if ( !empty( $terms ) ) {
+
+				$out = array();
+
+				/* Loop through each term, linking to the 'edit posts' page for the specific term. */
+				foreach ( $terms as $term ) {
+					$out[] = sprintf( '<a href="%s">%s</a>',
+						esc_url( add_query_arg( array( 'post_type' => $post->post_type, 'cr3ativdepartment' => $term->slug ), 'edit.php' ) ),
+						esc_html( sanitize_term_field( 'name', $term->name, $term->term_id, 'cr3ativdepartment', 'display' ) )
+					);
+				}
+
+				/* Join the terms, separating them with a comma. */
+				echo join( ', ', $out );
+			}
+
+			break;
+        
+        case 'jobpdf' :
+
+			 echo wp_get_attachment_url( $pdf );
+			break;
+
+		/* Just break out of the switch statement for everything else. */
+		default :
+			break;
+	}
+}
+
+
+
 
 ?>

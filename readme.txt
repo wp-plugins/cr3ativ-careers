@@ -3,7 +3,7 @@ Contributors: Cr3ativ
 Tags: careers, jobs
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.0.5
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,9 @@ Styling for these page templates are included in the includes directory under :
 
 
 == Changelog ==
+
+= 1.0.4 =
+Updated admin column view incase short codes are being used and added CSS to column to scroll when a lot of text is used in the content area.
 
 = 1.0.3 =
 * Updated admin view and language files.
