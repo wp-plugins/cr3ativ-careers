@@ -4,7 +4,7 @@ class cr3ativ_career extends WP_Widget {
 
 	// constructor
 	function cr3ativ_career() {
-        parent::WP_Widget(false, $name = __('Career Loop', 'cr3at_career') );
+        parent::__construct(false, $name = __('Career Loop', 'cr3at_career') );
     }
 
 	// widget form creation

@@ -5,7 +5,7 @@
  * Description: Custom written plugin to add career items / job opportunites (and categorize them) to your WordPress site.
  * Author: Jonathan Atkinson
  * Author URI: http://cr3ativ.com/
- * Version: 1.0.4
+ * Version: 1.1.0
  */
 
 /* Place custom code below this line. */
